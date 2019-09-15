@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="https://reactjs.org/favicon.ico">
+	<title>Gokul Github - React Page</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+	<div id="root" style="min-width: 100%;">
+		<div style="margin-left: 50%; margin-top: 20%">
+			<div class="spinner-border text-primary font-weight-bolder" role="status" style="height: 50px;width: 50px">
+				<span class="sr-only">Loading...</span>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+	<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+	<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+
+	<script type="text/babel">
+	class Main extends React.Component {
+		constructor(props) {
+			super(props);
+			this.state = {
+				user: {}
+			}
+		}
+
+		shareUser = (user) => {
+			this.setState({user});
+		}
+
+		render() {
+			return (
+				<div>
+					<Header shareUser={this.shareUser}/>
+					{this.state.user.avatar_url ?
+		        	<Body user={this.state.user}/>
+		        	: <Loading height={30} width={30}  color="red"/>}
+		        	<Footer />
+				</div>
+			);
+		}
+	}
+
+	class Header extends React.Component {
+		constructor(props) {
+			super(props);
+			this.state = {
+				user: {}
+			}
+		}
+
+		componentDidMount() {
+			this.fet();
+		}
+
+		fet = () => {
+			fetch('https://api.github.com/users/gokul-moorthy')
+			  .then(res => {
+			    return res.json();
+			  })
+			  .then(data => {
+			    //console.log(JSON.stringify(data));
+			    this.setState({user:data});
+			    this.props.shareUser(data);
+			  });
+			  //console.log(data);
+		};
+
+	    render() {
+	        return (
+		        <div>
+		        	<div>
+		        		{ this.state.user.avatar_url ?
+		        		<div>
+		        			<div style={{display:'flex',backgroundColor:"#307bc8"}} >
+		        				<img href="/" src={this.state.user.avatar_url} alt="User Photo" className="rounded-circle mx-left d-block col-lg-1 	col-md-2 col-sm-3 col-3" />
+		        				<h2 href="/" className="text-white my-auto float-right col-lg-3" style={{display:'inline-block'}}>{this.state.user.name}</h2>
+		        				<div className="my-auto col-lg-8 text-right">
+	        						<a href={this.state.user.html_url}>{this.github_icon}</a>
+	        					</div>
+	        				</div>
+		        		</div>
+		        		: <Loading height={30} width={30} color="red"/> }
+		        	</div>
+		        </div>
+	        );
+	    }
+	    github_icon = <svg height="50" viewBox="0 0 16 16" version="1.1" width="50" aria-hidden="true">
+	    	<path fillRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+	    </svg>
+	}
+
+	class Body extends React.Component {
+		constructor(props) {
+			super(props);
+		}
+
+		render() {
+			return (
+				<div>
+					<Aboutme user={this.props.user}/>
+					<hr />
+        			<Repos repo={this.props.user.repos_url} />
+        			<hr />
+        			<Following user={this.props.user}/>
+				</div>
+			)
+		}
+	}
+
+	class Aboutme extends React.Component {
+		constructor(props) {
+			super(props);
+		}
+
+		render() {
+			return (
+				<div className="mx-1">
+					<h3>My Github bio:</h3>
+					<p className="mx-4">{this.props.user.bio}</p>
+					<p className="strong">Active From: {((new Date(this.props.user.created_at))).toDateString()}</p>
+				</div>
+			);
+		}
+	}
+
+	class Repos extends React.Component {
+		constructor(props) {
+			super(props);
+			this.state = {
+				repos: []
+			}
+		}
+
+		componentDidMount() {
+			this.getRepo();
+		}
+		
+		getRepo = () => {
+		//console.log("fetching repos");
+			fetch(this.props.repo).
+				then(res => {
+					return res.json();
+				}).
+				then(data => {
+				this.setState({
+					repos:data
+				});
+				//console.log("repose stored", this.state.repos);
+			});
+		};
+
+		render() {
+			return(
+				<div className="container-fluid">
+					<h4>My Repositories Info:</h4>
+					<div className="row">
+						<div className="col-lg-6">
+							<h5 className="mx-3">Repository names:</h5>
+							{this.state.repos.map( rep => 
+								<div className="mx-5" style={{display:'flex'}} key={rep.node_id}>
+									<p className="col-lg-8">{rep.name}</p>
+									<a className="col-lg-4" href={rep.html_url}>View</a>
+								</div>
+							)}
+						</div>
+						<div className="col-ls-6">
+							<h5>Total Repositaries : {this.state.repos.length}</h5>
+						</div>
+					</div>
+					<hr />
+				</div>
+			);
+		};
+	}
+
+	class Following extends React.Component {
+		constructor(props) {
+			super(props);
+			this.state = {
+				following: []
+			};
+		}
+
+		componentDidMount() {
+			this.getFollowing();
+		}
+
+		getFollowing() {
+			var url = ((this.props.user.following_url).split('{'))[0];
+			fetch(url).
+				then(res => {
+					return res.json();
+				}).
+				then(data => { this.setState({	following:data });});
+		}
+		render() {
+			return (
+				<div>
+					{ this.state.following.length ?
+					<div className="d-inline-flex">
+						{this.state.following.map(follow =>
+							<div key={follow.node_id} className="col-lg-6" style={{display:"flex"}}>	<a href={follow.html_url}><img src={follow.avatar_url} alt="User Photo" className="rounded-circle mx-center col-lg-3" /></a></div>
+							)
+						}
+					</div> : <Loading height={30} width={30} color="red"/>
+					}
+				</div>
+			);
+		}
+	}
+
+	class Footer extends React.Component {
+		constructor(props) {
+			super(props);
+		}
+
+		render() {
+			return(
+				<div style={{minHeight: 100,backgroundColor:"#307bc8"}}>
+					<h1>Footer component</h1>
+				</div>
+			);
+		}
+	}
+
+	class Loading extends React.Component {
+		constructor(props) {
+			super(props);
+			this.height = this.props.height ? this.props.height : 50;
+			this.width = this.props.width ? this.props.width : 50;
+			this.color = this.props.color ? this.props.color : 'rgb(48, 123, 200)'		
+		}
+		render() {
+			return (
+				<React.Fragment>
+						<div className="spinner-border font-weight-bolder" role="status" style={{height: this.height,width: this.width, color: this.color}}>
+							<span className="sr-only">Loading...</span>
+						</div>
+				</React.Fragment>
+			)
+		}
+	}
+
+	ReactDOM.render(
+	    <Main />,
+	    document.getElementById('root')
+	);
+</script>
+</body>
+</html>
