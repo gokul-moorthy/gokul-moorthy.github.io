@@ -210,9 +210,12 @@
 					{ this.state.following.length ?
 					<div className="d-inline-flex">
 						{this.state.following.map(follow =>
-							<div key={follow.node_id} className="col-lg-6" style={{display:"flex"}}>	<a href={follow.html_url}><img src={follow.avatar_url} alt="User Photo" className="rounded-circle mx-center col-lg-3" /></a></div>
-							)
-						}
+							<div key={follow.node_id} style={{display:"flex",maxWidth:150, minHeight:150}}>
+								<a href={follow.html_url}>
+									<img title={follow.login} src={follow.avatar_url} alt="User Photo" className="rounded-circle mx-center col-lg-12" />
+								</a>
+							</div>
+						)}
 					</div> : <Loading height={30} width={30} color="red"/>
 					}
 				</div>
